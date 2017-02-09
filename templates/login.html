@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+}
+</style>
+</head>
+<body>
+
+
+<ul>
+  <li><a class="active" href="/">Home</a></li>
+  
+</ul>
+<center>
+<br><br><br>
+<form>
+<input type="text" name="username" placeholder="Username">
+<br><br>
+<input type="password" name="password" placeholder="Password">
+<br><br>
+<input type="submit" name="Submit">
+</form>
+<br>
+
+<form method="get" action="/signup">
+    <button type="submit">Sign up!</button>
+</form>  
+<div class = 'flash'>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+{% for message in messages %}
+<li><strong>{{message}}</strong></li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+</div>
+</center>
+
+</body>
+</html>
