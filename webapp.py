@@ -17,10 +17,13 @@ session = DBSession()
 
 @app.route('/')
 def main():
-	if(session.query(User).filter_by(id=login_session['id']).first() is not None):
-		usr = session.query(User).filter_by(id=login_session['id']).first()
-		posts=session.query(Post).all()
-		return render_template('main.html' , user = usr , current_id=login_session['id'], Post=posts)
+	if 'id' in login_session:
+		if(session.query(User).filter_by(id=login_session['id']).first() is not None):
+			usr = session.query(User).filter_by(id=login_session['id']).first()
+			posts=session.query(Post).all()
+			return render_template('main.html' , user = usr , current_id=login_session['id'], Post=posts)
+		else :
+			return render_template('main.html' , user=None , current_id=-1)
 	else :
 		return render_template('main.html' , user=None , current_id=-1)
 
@@ -35,6 +38,7 @@ def login():
 			if user.password == pasword:
 				login_session['username'] = user.username
 				login_session['id'] = user.id
+				return redirect(url_for('main'))
 			else :
 				flash ("The username or password you entered do not exist, try again or sign up if you don't have an account!")
 				return redirect(url_for('login'))
@@ -47,10 +51,12 @@ def login():
 @app.route('/profile/<int:user_id>', methods = ['GET','POST'])
 def profile(user_id):
 	user = session.query(User).filter_by(id=user_id).one()
+	Posts = session.query(Post).filter_by(userid=user_id).all()
 	if login_session['id'] is not None:
-		return render_template('profile.html' , user=user , current_id=login_session['id'])
+		return render_template('profile.html' , user=user , current_id=login_session['id'], Posts=Posts)
 	else :
-		return render_template('profile.html' , user=user)
+		return render_template('profile.html' , user=user , Posts=Posts)
+
 @app.route("/post/<int:post_id>")
 def product(post_id):
 	post = session,query(Post).filter_by(id=post_id).one()
@@ -87,6 +93,7 @@ def upload():
 			flash ("Please fill in all the args")
 			return redirect(url_for('upload'))
 
+
 		else :
 			session.add(pst)
 			session.commit()
@@ -94,9 +101,29 @@ def upload():
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 			return redirect(url_for('main'))
 	else :
+		if(session.query(User).filter_by(id=login_session['id']).first() is not None):
+			user = session.query(User).filter_by(id=login_session['id']).first()
+			return render_template('uploader.html' , user=user)	
 		return render_template('uploader.html')	
 
- 	
+ 
+@app.route('/profile/edit' , methods = ['GET' , 'POST'])
+def edit():
+	if request.method == 'POST':
+		usr = User(name = request.form['name'], email = request.form['email'], username  = request.form['username'], password = request.form['password'] , id=login_session['id'].one())
+		if usr.name == "" or usr.email == "" or usr.username == "" or usr.password == "":	
+			flash ("Please fill in all the forms")
+		else :
+			user = session.query(User).filter_by(id=login_session['id']).one()
+			user = usr
+	else :
+		return render_template('edit.html')
+
+
+@app.route('/logout')
+def logout():
+	login_session.pop('id' , None)
+	return redirect(url_for('main'))
 
 if __name__ == '__main__':
     app.run(debug=True)
