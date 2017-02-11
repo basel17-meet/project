@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.secret_key = "FUUUUCKFUCKFUCKFUCKFUCK"
 
 
-engine = create_engine('sqlite:///crudlab.db')
+engine = create_engine('sqlite:///project.db')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine, autoflush=False)
 session = DBSession()
@@ -19,7 +19,8 @@ session = DBSession()
 def main():
 	if(session.query(User).filter_by(id=login_session['id']).first() is not None):
 		usr = session.query(User).filter_by(id=login_session['id']).first()
-		return render_template('main.html' , user = usr , current_id=login_session['id'])
+		posts=session.query(Post).all()
+		return render_template('main.html' , user = usr , current_id=login_session['id'], Post=posts)
 	else :
 		return render_template('main.html' , user=None , current_id=-1)
 
@@ -78,9 +79,22 @@ def signup():
 @app.route('/uploader/' , methods = ['GET' , 'POST'])
 def upload():
 	if request.method == 'POST':
-		pst =Post(user =login_session['username'] , user_id =login_session['id'], title = request.form['title'] , descreption = request.form['descreption1'] , file = request.form['filen'])
+		pst =Post(user =login_session['username'] , user_id =login_session['id'], title = request.form['title'] , descreption = request.form['descreption'] , file = request.form['file'])
+		if (user == None):
+			flash("Please login to upload") 
+			return redirect(url_for('upload'))
+		elif title =="" or descreption =="" or file is None:
+			flash ("Please fill in all the args")
+			return redirect(url_for('upload'))
+
+		else :
+			session.add(pst)
+			session.commit()
+			filename = secure_filename(file.filename)
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+			return redirect(url_for('main'))
 	else :
-		return redirect(url_for('uploader.html'))
+		return render_template('uploader.html')	
 
  	
 

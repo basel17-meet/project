@@ -1,7 +1,10 @@
-from sqlalchemy import Column, Date, Float, ForeignKey, Integer, String , File
+from sqlalchemy import Column,Integer,String, DateTime, ForeignKey, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
+from passlib.apps import custom_app_context as pwd_context
+import random, string
+from itsdangerous import(TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 
 Base = declarative_base()
 
@@ -24,6 +27,12 @@ class Post(Base):
 	user = relationship ("User")
 	title = Column(String)
 	descreption = Column(String)
-	file = Column(File)
+	photo = Column(String)
+
+
+engine = create_engine('sqlite:///project.db')
+
+
+Base.metadata.create_all(engine)
 
 
