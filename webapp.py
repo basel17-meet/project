@@ -110,12 +110,17 @@ def upload():
 @app.route('/profile/edit' , methods = ['GET' , 'POST'])
 def edit():
 	if request.method == 'POST':
-		usr = User(name = request.form['name'], email = request.form['email'], username  = request.form['username'], password = request.form['password'] , id=login_session['id'].one())
+		usr = User(name = request.form['name'], email = request.form['email'], username  = request.form['username'], password = request.form['password'] )
 		if usr.name == "" or usr.email == "" or usr.username == "" or usr.password == "":	
 			flash ("Please fill in all the forms")
 		else :
-			user = session.query(User).filter_by(id=login_session['id']).one()
-			user = usr
+			user = session.query(User).filter_by(id=login_session['id']).first()
+			user.name = usr.name
+			user.password = usr.password
+			user.email = usr.email
+			user.username = usr.username
+			session.commit()
+			return redirect(url_for('profile' , user_id=user.id))
 	else :
 		return render_template('edit.html')
 
