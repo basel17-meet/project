@@ -123,7 +123,7 @@ def edit():
 			session.commit()
 			return redirect(url_for('profile' , user_id=user.id))
 	else :
-		user1 = session.query(User).filter_by(id=login_session['id']).first()
+		user1 = session.query(User).filter_by(id=login_session['id']).one()
 		return render_template('edit.html' , user = user1)
 
 
@@ -133,8 +133,8 @@ def logout():
 	return redirect(url_for('main'))
 
 @app.route('/profile/edit/delete', methods = ['POST'])
-def delete(user_id):
-	usr = session.query(User).filter_by(user_id=login_session['id']).one()
+def delete():
+	usr = session.query(User).filter_by(id=login_session['id']).one()
 	session.delete(usr)
 	session.commit()
 	return redirect(url_for('main')) 
