@@ -85,7 +85,7 @@ def signup():
 @app.route('/uploader/' , methods = ['GET' , 'POST'])
 def upload():
 	if request.method == 'POST':
-		pst =Post(user =login_session['username'] , user_id =login_session['id'], title = request.form['title'] , description = request.form['description'] , file = request.form['file'])
+		pst =Post(user =login_session['username'] , user_id =login_session['id'], title = request.form['title'] , description = request.form['description'] , file = request.files['file'])
 		if (user == None):
 			flash("Please login to upload") 
 			return redirect(url_for('upload'))
@@ -137,7 +137,7 @@ def delete(user_id):
 	usr = session.query(User).filter_by(user_id=login_session['id']).one()
 	session.delete(usr)
 	session.commit()
-	return redirect(url_for('Main')) 
+	return redirect(url_for('main')) 
 
 
 if __name__ == '__main__':
