@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="style.css">
 
 <style>
 ul {
@@ -8,7 +9,7 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: #1ccad8;
 }
 
 li {
@@ -17,14 +18,14 @@ li {
 
 li a {
     display: block;
-    color: white;
+    color: #d1fff9;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
 }
 
 li a:hover {
-    background-color: #111;
+    background-color: #457b96;
 }
 </style>
 </head>
@@ -34,9 +35,12 @@ li a:hover {
   <li><a class="active" href="/">Infinifact</a></li>
   
 {% if user.id == current_id %}
-  <li><a class="active" href="/uploader/">Uploader</a></li>
-  <div align="right"> <li><a class="active" href="{{ url_for('profile' , user_id=user.id) }}">{{user.username}}</a></li> </div>
-   <li><a class="active" href="{{ url_for('logout') }}">Logout</a></li>
+   <li style="float:right"><a class="active" href="{{ url_for('logout') }}">Logout</a></li>
+    <li style="float:right"><a class="active" href="{{ url_for('profile' , user_id=user.id) }}">{{user.username}}</a></li>
+
+   <li style="float:right"><a class="active" href="/uploader/">Uploader</a></li>
+
+
 </ul>
 {%else%}
 <div align="right"><ul>

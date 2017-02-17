@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="style.css">
 
 <style>
 ul {
@@ -8,7 +9,7 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: #1ccad8;
 }
 
 li {
@@ -24,7 +25,7 @@ li a {
 }
 
 li a:hover {
-    background-color: #111;
+    background-color: #457b96;
 }
 </style>
 </head>
@@ -34,16 +35,21 @@ li a:hover {
   <li><a class="active" href="/">Infinifact</a></li>
   
 {% if user != None %}
- <li><a class="active" href="{{url_for('profile' , user_id=user.id) }}">{{user.username}}</a></li></ul>
+   <li style="float:right"><a class="active" href="{{url_for('profile' , user_id=user.id) }}">{{user.username}}</a></li>
 </ul>
 {% endif %}
-
+<center>
+<br><br><br>
+<br>
 <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
 	<input type=file name=file>
-	<input type="text" name="descreption1" placeholder="descreption">
+	<br><br>
+	<input type="text" name="description1" placeholder="description">
+	<br><br>
     <input type="text"	 name="title" placeholder="title">
+    <br><br>
     <input type="submit" value="Upload Image" name="submit">
 </form>
-
+</center>
 </body>
 </html>

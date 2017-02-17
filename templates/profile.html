@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="style.css">
 
 
 <style>
@@ -10,7 +11,7 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: #1ccad8;
 }
 
 li {
@@ -26,17 +27,19 @@ li a {
 }
 
 li a:hover {
-    background-color: #111;
+    background-color: #457b96;
 }
 </style>
 </head>
 <body>
 
+
 <ul>
   <li><a class="active" href="/">Infinifact</a></li>
   
 {% if user.id == current_id %}
-  <li><a class="active" href="/uploader/">Uploader</a></li>
+   <li style="float:right"><a class="active" href="/uploader/">Uploader</a></li>
+  
 </ul>
 {% endif %}
 
@@ -53,7 +56,7 @@ li a:hover {
     {% for post in Posts %}
     <center>
     <p>{{post.title}}</p>
-    <a href={{url_for('', product_id = item.id)}}>
+    <a href={{url_for('', post_id = post.id)}}>
         <p>{{post.descreption}}</p>
         <img src={{post.photo}} height="250" width="250">
     </a>

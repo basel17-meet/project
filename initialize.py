@@ -7,7 +7,7 @@ engine = create_engine('sqlite:///crudlab.db')
 Base.metadata.create_all(engine)
 #Base.metadata.bind = engine
 
-DBSession = sessionmaker(bind=engine,autoflush=False)
+DBSession = sessionmaker(bind=engine,autoflush=Fals)e
 session = DBSession()
 
 session.query(User).delete()

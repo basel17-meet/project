@@ -85,11 +85,11 @@ def signup():
 @app.route('/uploader/' , methods = ['GET' , 'POST'])
 def upload():
 	if request.method == 'POST':
-		pst =Post(user =login_session['username'] , user_id =login_session['id'], title = request.form['title'] , descreption = request.form['descreption'] , file = request.form['file'])
+		pst =Post(user =login_session['username'] , user_id =login_session['id'], title = request.form['title'] , description = request.form['description'] , file = request.form['file'])
 		if (user == None):
 			flash("Please login to upload") 
 			return redirect(url_for('upload'))
-		elif title =="" or descreption =="" or file is None:
+		elif title =="" or description =="" or file is None:
 			flash ("Please fill in all the args")
 			return redirect(url_for('upload'))
 
@@ -113,6 +113,7 @@ def edit():
 		usr = User(name = request.form['name'], email = request.form['email'], username  = request.form['username'], password = request.form['password'] )
 		if usr.name == "" or usr.email == "" or usr.username == "" or usr.password == "":	
 			flash ("Please fill in all the forms")
+			return redirect(url_for('edit'))
 		else :
 			user = session.query(User).filter_by(id=login_session['id']).first()
 			user.name = usr.name
@@ -122,13 +123,22 @@ def edit():
 			session.commit()
 			return redirect(url_for('profile' , user_id=user.id))
 	else :
-		return render_template('edit.html')
+		user1 = session.query(User).filter_by(id=login_session['id']).first()
+		return render_template('edit.html' , user = user1)
 
 
 @app.route('/logout')
 def logout():
 	login_session.pop('id' , None)
 	return redirect(url_for('main'))
+
+@app.route('/profile/edit/delete', methods = ['POST'])
+def delete(user_id):
+	usr = session.query(User).filter_by(user_id=login_session['id']).one()
+	session.delete(usr)
+	session.commit()
+	return redirect(url_for('Main')) 
+
 
 if __name__ == '__main__':
     app.run(debug=True)
