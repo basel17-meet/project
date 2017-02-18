@@ -39,9 +39,9 @@ def login():
 				login_session['username'] = user.username
 				login_session['id'] = user.id
 				return redirect(url_for('main'))
-			else :
-				flash ("The username or password you entered do not exist, try again or sign up if you don't have an account!")
-				return redirect(url_for('login'))
+		else:
+			flash("*The username or password you entered do not exist, try again or sign up if you don't have an account!")
+			return redirect(url_for('login'))
 
 	else:
 		return render_template('login.html')
@@ -58,7 +58,7 @@ def profile(user_id):
 		return render_template('profile.html' , user=user , Posts=Posts)
 
 @app.route("/post/<int:post_id>")
-def product(post_id):
+def post(post_id):
 	post = session,query(Post).filter_by(id=post_id).one()
 	return render_template('Post.html' , post = post)
 
@@ -106,6 +106,9 @@ def upload():
 			return render_template('uploader.html' , user=user)	
 		return render_template('uploader.html')	
 
+@app.route('/uploads/<filename>')
+def uploaded_file(file):
+	return send_from_directory(app.config['UPLOAD_FOLDER'], file)
  
 @app.route('/profile/edit' , methods = ['GET' , 'POST'])
 def edit():
